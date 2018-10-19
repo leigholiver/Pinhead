@@ -76,6 +76,12 @@ function onReaction(react, user)
     if ( !Util.hasRole(user, guild, config.pinner.role) )
         return;
 
+    // Ignore the react if the message has been pinned before
+    var test = message.reactions.filter(rx => rx.emoji.name == config.pinner.emoji.toLowerCase());
+    if (test.entries().next().value[1].count > 1) {
+        return;
+    }
+
     // Finally, go ahead and pin it to the channel
     pinMessage(guild, message, user);
 }
