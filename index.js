@@ -10,6 +10,9 @@ const FS      = require('fs');
 const Util    = require('./util');
 const YAML    = require('js-yaml');
 
+// file obtained from @oliveratgithub (https://gist.github.com/oliveratgithub/0bf11a9aff0d6da7b46f1490f86a71eb) and slightly modified
+const Emojis = require("./emojis.json"); 
+
 /* Globals */
 console.log(`*** Starting Pinhead ${Meta.version} ***`);
 
@@ -69,16 +72,18 @@ function onReaction(react, user)
         return;
 
     // Ignore if it's not the superpin emoji
-    if ( react.emoji.name.toLowerCase() !== config.pinner.emoji.toLowerCase() )
+    if ( react.emoji.name.toLowerCase() !== config.pinner.emoji.toLowerCase() && 
+            Emojis[react.emoji.name].shortname.replace(/\:/g, "").toLowerCase() !== config.pinner.emoji.toLowerCase() &&
+            Emojis[react.emoji.name].unicode !== config.pinner.emoji.toLowerCase()
+            )
         return;
 
     // Ignore if this user is not permitted to pin
     if ( !Util.hasRole(user, guild, config.pinner.role) )
         return;
 
-    // Ignore the react if the message has been pinned before
     var test = message.reactions.filter(rx => rx.emoji.name == config.pinner.emoji.toLowerCase());
-    if (test.entries().next().value[1].count > 1) {
+    if (test.entries().next().value !== undefined && test.entries().next().value[1].count > 1) {
         return;
     }
 
