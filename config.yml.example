@@ -10,8 +10,6 @@ pinner:
   role: pinner
 
   # Name of the emoji to look for as a reaction, to messages that need pinning
-  # This must be a custom server emoji, standard emojis will not work
-  # https://github.com/RoyCurtis/Pinhead/issues/1
   emoji: superpin
 
   # Name of the target channel to pin messages to
